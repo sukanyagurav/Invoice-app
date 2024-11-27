@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+[data-theme='dark']{
+    background-color: #141625;
+    @apply text-white;
+    transition: all;
+    transition-duration: 300ms;
+}
+[data-theme='light']{
+    background-color: #F8F8FB;
+    @apply text-black;
+    transition: all;
+    transition-duration: 300ms;
+}
+label:hover::before{
+    border:2px solid #7C5DFA;
+}
+input[type='radio']:focus + label::before,
+label:focus::before{
+    box-shadow: 0 0 8px #7C5DFA;
+}
+input[type='radio']:checked + label::before{
+    content:'\2713';
+    color: white;
+    background-color: #7C5DFA;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
