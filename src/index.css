@@ -9,6 +9,12 @@
     transition: all;
     transition-duration: 300ms;
 }
+[data-theme='dark'] dialog{
+    background-color: #141625;
+}
+[data-theme='light'] dialog{
+    background-color: #F8F8FB;
+}
 [data-theme='light']{
     background-color: #F8F8FB;
     @apply text-black;
@@ -29,5 +35,9 @@ input[type='radio']:checked + label::before{
     display: flex;
     justify-content: center;
     align-items: center;
+    
+}
+.dialog{
+    transform: translateX(-50%);
     
 }

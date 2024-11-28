@@ -18,7 +18,7 @@ const Header = () => {
         document.body.setAttribute('data-theme', isDark);
     }, [isDark]);
   return (
-    <header className="bg-[#373B53] fixed top-0 flex-row left-0 bottom-0 h-24 w-full md:h-screen md:w-28 flex md:flex-col justify-between md:rounded-tr-xl overflow-hidden">
+    <header className="bg-[#373B53] z-50 drop-shadow-2xl sticky top-0 flex-row left-0 bottom-0 h-24 w-full md:h-screen md:w-28 flex md:flex-col justify-between md:rounded-tr-xl overflow-hidden">
       <a
         href="#none"
         className="w-24 rounded-tr-3xl rounded-br-3xl md:w-full md:h-24  p-3 flex justify-center md:rounded-none items-center bg-[#7C5DFA]  overflow-hidden "
