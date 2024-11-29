@@ -2,24 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
-
-[data-theme='dark']{
+[data-theme='light'],[data-theme='light'] dialog,[data-theme='dark'] .filters{
+    background-color: #F8F8FB;
+    @apply text-black;
+    transition: all;
+    transition-duration: 300ms;
+}
+[data-theme='dark'],[data-theme='dark'] dialog,[data-theme='dark'] option  {
     background-color: #141625;
     @apply text-white;
     transition: all;
     transition-duration: 300ms;
 }
-[data-theme='dark'] dialog{
-    background-color: #141625;
+[data-theme='dark'] .filters{
+    @apply bg-[#252945] text-white;
 }
-[data-theme='light'] dialog{
-    background-color: #F8F8FB;
-}
-[data-theme='light']{
-    background-color: #F8F8FB;
-    @apply text-black;
-    transition: all;
-    transition-duration: 300ms;
+[data-theme='light'] .filters label::before{
+    @apply bg-[#dcdcdd];
 }
 label:hover::before{
     border:2px solid #7C5DFA;
@@ -38,6 +37,11 @@ input[type='radio']:checked + label::before{
     
 }
 .dialog{
-    transform: translateX(-50%);
-    
+    transform: translateX(-50%);   
+}
+[data-theme="light"] .lightBtn{
+    @apply bg-[#f2f2f3] text-gray-500;
+}
+[data-theme="dark"] .lightBtn,[data-theme='dark']  input{
+    @apply bg-[#1E2139] text-gray-400 border-0;
 }

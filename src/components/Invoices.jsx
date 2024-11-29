@@ -29,7 +29,7 @@ const Invoices = () => {
 
               {openDropDown && (
                 <ul
-                  className="absolute p-4 w-full top-12 bg-[#252945] rounded-lg pb-0"
+                  className="absolute p-4 w-full top-12 filters rounded-lg pb-0 shadow-3xl"
                   tabIndex={1}
                 >
                   <li className="mb-3 relative">
@@ -88,7 +88,7 @@ const Invoices = () => {
               onClick={() => setIsCreate(true)}
             >
               <span className=" flex items-center justify-center bg-white text-[#7C5DFA] w-8 h-8 rounded-full">
-                <span class="fa-solid fa-plus"></span>
+                <span className="fa-solid fa-plus"></span>
               </span>
               <span className="hidden md:block">New Invoice</span>
               <span className="block md:hidden">New</span>
