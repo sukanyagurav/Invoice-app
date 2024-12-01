@@ -23,6 +23,16 @@
 label:hover::before{
     border:2px solid #7C5DFA;
 }
+.itemList input{
+    max-width: 120px !important;
+}
+.itemList > div:not(:first-of-type) label {
+  opacity: 0;
+  position: absolute;
+}
+.itemList > div:first-of-type button{
+ @apply mt-16;
+}
 input[type='radio']:focus + label::before,
 label:focus::before{
     box-shadow: 0 0 8px #7C5DFA;

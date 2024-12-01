@@ -1,7 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import Input from "./Input";
-
+import { v4 as uuidv4 } from "uuid";
 const Modal = ({ closeModal, children, isOpen }) => {
+  const [itemList, setItemList] = useState([]);
+  function addItem() {
+    setItemList([
+      ...itemList,
+      { name: "", quantity: 0, price: 0, total: 0, id: uuidv4() },
+    ]);
+  }
+
+  function removeItem(index) {
+    const newArray = [...itemList].filter((item) => item.id !== index);
+    setItemList(newArray);
+  }
   return (
     <>
       <div
@@ -9,11 +21,11 @@ const Modal = ({ closeModal, children, isOpen }) => {
         onClick={closeModal}
       ></div>
       <dialog
-        className="fixed top-[5rem] md:top-0 -left-0  p-6 pt-12 md:p-12 md:pl-[8rem]  min-h-screen  text-black z-20  drop-shadow-2xl rounded-tr-3xl rounded-br-3xl w-full md:w-[700px] md:right-auto  "
+        className="fixed top-[5rem] md:top-0 -left-0  p-6 pt-12 md:p-12 md:pl-[8rem]  min-h-screen   text-black z-20  drop-shadow-2xl rounded-tr-3xl rounded-br-3xl w-full md:w-[700px] md:right-auto  "
         open={isOpen}
       >
         <h2 className="text-3xl font-bold">Create Invoice</h2>
-        <div className="my-8 mb-0 overflow-y-scroll max-h-[480px] pr-8 pl-1">
+        <div className="my-8 mb-0 overflow-y-scroll max-h-[480px] h-full pr-8 pl-1">
           <h3 className="text-[#7C5DFA] font-bold">Bill From</h3>
           <div>
             <Input
@@ -71,9 +83,16 @@ const Modal = ({ closeModal, children, isOpen }) => {
               />
 
               <div className="flex-1 flex flex-col  relative">
-                <label htmlFor="payementTerms" className='opacity-[0.8] mt-4 mb-2 '>Payment Terms</label>
-                <select id="payementTerms" className="p-[0.6rem] border-[0.1rem]  rounded-lg bg-transparent focus:outline-[#7C5DFA] appearance-none">
-                
+                <label
+                  htmlFor="payementTerms"
+                  className="opacity-[0.8] mt-4 mb-2 "
+                >
+                  Payment Terms
+                </label>
+                <select
+                  id="payementTerms"
+                  className="p-[0.6rem] border-[0.1rem]  rounded-lg bg-transparent focus:outline-[#7C5DFA] appearance-none"
+                >
                   <option value="1">Net 1 Day</option>
                   <option value="7">Net 7 Days</option>
                   <option value="14">Net 14 Days</option>
@@ -87,15 +106,42 @@ const Modal = ({ closeModal, children, isOpen }) => {
             <Input type="text" labelText="Description" id="description" />
 
             <h3 className="font-bold my-8  opacity-[0.7]">ItemList</h3>
+            <div className="flex flex-col itemList ">
+              {itemList.map((item, index) => (
+                <div className="flex gap-4 " key={item.id}>
+                  <Input type="text" labelText="Item Name" id="itemName" />
+                  <Input type="number" labelText="Qty." id="quantity" />
+                  <Input type="number" labelText="Price" id="price" />
+                  <div className="flex flex-col ">
+                    <label htmlFor="total" className="opacity-[0.8] mt-4  ">
+                      Total
+                    </label>
+                    <span className=" p-2 mt-3 block w-10">{item.total}</span>
+                  </div>
+                  <button
+                    className="my-4 block hover:text-red-400 self-center"
+                    onClick={() => removeItem(item.id)}
+                  >
+                    <span className="fa-solid fa-trash"></span>
+                  </button>
+                </div>
+              ))}
+            </div>
 
-            <button className="mb-8 block w-full lightBtn p-4 rounded-full font-semibold">
-             + Add New Item
+            <button
+              onClick={addItem}
+              className="my-8 block w-full lightBtn p-4 rounded-full font-semibold"
+            >
+              + Add New Item
             </button>
           </div>
         </div>
 
         <div className="flex justify-between gap-4 py-4 mt-auto ">
-          <button className="lightBtn p-3 px-8 rounded-full" onClick={closeModal}>
+          <button
+            className="lightBtn p-3 px-8 rounded-full"
+            onClick={closeModal}
+          >
             Discard
           </button>
           <div className="flex gap-4">
