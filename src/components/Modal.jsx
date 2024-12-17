@@ -29,6 +29,7 @@ const schemaTypes = {
 };
 const Modal = ({ closeModal, children, isOpen }) => {
   const [itemList, setItemList] = useState([]);
+
   const schema = z.object(schemaTypes);
   const {
     register,
@@ -50,7 +51,6 @@ const Modal = ({ closeModal, children, isOpen }) => {
   }
 
   function validateData(data){
-    console.log(data)
   }
   return (
     <>
@@ -59,7 +59,7 @@ const Modal = ({ closeModal, children, isOpen }) => {
         onClick={closeModal}
       ></div>
       <dialog
-        className="fixed top-[5rem] md:top-0 -left-0  p-6 pt-12 md:p-12 md:pl-[8rem]  min-h-screen   text-black z-20  drop-shadow-2xl rounded-tr-3xl rounded-br-3xl w-full md:w-[700px] md:right-auto  "
+        className="fixed top-[5rem] md:top-0 -left-0  p-4 pt-12 md:p-12 md:pl-[8rem]  min-h-screen   text-black z-20  drop-shadow-2xl rounded-tr-3xl rounded-br-3xl w-full md:w-[700px] md:right-auto  "
         open={isOpen}
       >
         <h2 className="text-3xl font-bold">Create Invoice</h2>
@@ -187,7 +187,7 @@ const Modal = ({ closeModal, children, isOpen }) => {
                     <option value="30">Net 30 Days</option>
                   </select>
                   <span
-                    className={`fa-solid fa-angle-down transition-all duration-300 absolute top-[60%] right-6`}
+                    className={`fa-solid fa-angle-down transition-all duration-300 absolute top-[65%] right-6`}
                   ></span>
                 </div>
               </div>
@@ -253,23 +253,24 @@ const Modal = ({ closeModal, children, isOpen }) => {
             </div>
           </div>
 
-          <div className="flex justify-between gap-4 py-4 mt-auto ">
+        
+        </form>
+        <div className="flex sticky justify-between gap-4 py-4 mt-auto ">
             <button
-              className="lightBtn p-3 px-8 rounded-full"
+              className="lightBtn p-3 rounded-2xl px-4 md:px-8 md:rounded-full"
               onClick={closeModal}
             >
               Discard
             </button>
-            <div className="flex gap-4">
-              <button className="p-3 bg-[#363B53] ml-8 px-6 text-gray-300 rounded-full">
+            <div className="flex gap-2">
+              <button className="p-3 bg-[#363B53] px-4 rounded-2xl md:ml-8 md:px-6 text-gray-300 md:rounded-full">
                 Save as Draft
               </button>
-              <button className="p-3 bg-[#7C5DFA]  px-6 text-gray-300 rounded-full">
+              <button className="p-3 bg-[#7C5DFA] px-4  md:px-6 text-gray-300 rounded-2xl md:rounded-full">
                 Save & Send
               </button>
             </div>
           </div>
-        </form>
       </dialog>
     </>
   );

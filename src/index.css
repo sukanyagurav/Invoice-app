@@ -59,9 +59,3 @@ input[type='radio']:checked + label::before{
 [data-theme="dark"] .lightBtn,[data-theme='dark']  input{
     @apply bg-[#1E2139] text-gray-400 border-gray-700;
 }
-
-
-.form{
-    height: calc(-5rem + 100vh);
-
-}
