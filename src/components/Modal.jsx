@@ -5,30 +5,36 @@ import { useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import Errors from "./Errors";
 
-const items = {
-  itemName: z.string().min(2, { message: "Please enter item name" }),
-  quantity: z.number({ message: "This field is required!" }),
-  price: z.number({ message: "This field is required!" }),
-};
+const itemsType = z.object({
+  itemName: z.string().min(1, { message: "Item Name is required" }),
+  quantity: z.number().min(1, { message: "Quantity must be at least 1" }),
+  price: z.number().min(1, { message: "Price must be a positive number" }),
+});
 const schemaTypes = {
   fromStreetAddress: z
     .string()
     .min(15, { message: "Please enter Street address" }),
-  // fromCity:z.string().min(3,{ message:'Please enter City'}),
-  // fromPostalCode:  z.number({message:'This field is required!'}),
-  // fromCountry:z.string().min(3,{ message:'Please enter Country'}),
-  // clientName:z.string().min(2,{ message:'Please enter Client Name'}),
-  // clientEmail:z.string().email({ message:'Please enter a valid email'}),
-  // clientStreetAddress:z.string().min(15,{ message:'Please enter Client Street address'}),
-  // clientCity:z.string().min(3,{ message:'Please enter Client City'}),
-  // clientPostalCode: z.number({message:'This field is required!'}),
-  // clientCountry:z.string().min(3,{ message:'Please enter client Country'}),
-  // description:z.string().min(2,{ message:'Please enter description'}),
-  // items:z.array(items)
+  fromCity: z.string().min(3, { message: "Please enter City" }),
+  fromPostalCode: z.number({ message: "This field is required!" }),
+  fromCountry: z.string().min(3, { message: "Please enter Country" }),
+  clientName: z.string().min(2, { message: "Please enter Client Name" }),
+  clientEmail: z.string().email({ message: "Please enter a valid email" }),
+  clientStreetAddress: z
+    .string()
+    .min(15, { message: "Please enter Client Street address" }),
+  clientCity: z.string().min(3, { message: "Please enter Client City" }),
+  clientPostalCode: z.number({ message: "This field is required!" }),
+  clientCountry: z.string().min(3, { message: "Please enter client Country" }),
+  description: z.string().min(2, { message: "Please enter description" }),
+  items: z
+    .array(itemsType)
+    .min(1, { message: "At least one item is required" }),
 };
 const Modal = ({ closeModal, children, isOpen }) => {
   const [itemList, setItemList] = useState([]);
+  const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
 
   const schema = z.object(schemaTypes);
   const {
@@ -36,9 +42,15 @@ const Modal = ({ closeModal, children, isOpen }) => {
     formState: { errors, isSubmitSuccessful },
     handleSubmit,
     reset,
-  } = useForm({ resolver: zodResolver(schema) });
-
-  function addItem() {
+  } = useForm({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      items: [],
+    },
+  });
+  const invalidInputs = Object.keys(errors).length;
+  function addItem(e) {
+    e.preventDefault();
     setItemList([
       ...itemList,
       { name: "", quantity: 0, price: 0, total: 0, id: uuidv4() },
@@ -50,7 +62,8 @@ const Modal = ({ closeModal, children, isOpen }) => {
     setItemList(newArray);
   }
 
-  function validateData(data){
+  function validateData(data) {
+    console.log(data);
   }
   return (
     <>
@@ -62,9 +75,12 @@ const Modal = ({ closeModal, children, isOpen }) => {
         className="fixed top-[5rem] md:top-0 -left-0  p-4 pt-12 md:p-12 md:pl-[8rem]  min-h-screen   text-black z-20  drop-shadow-2xl rounded-tr-3xl rounded-br-3xl w-full md:w-[700px] md:right-auto  "
         open={isOpen}
       >
-        <h2 className="text-3xl font-bold">Create Invoice</h2>
-        <form onSubmit={handleSubmit(validateData)} noValidate="noValidate">
-          <div className="my-8 mb-0 overflow-y-scroll max-h-[480px] h-full pr-8 pl-1">
+        <h2 className="text-3xl font-bold mb-6">Create Invoice</h2>
+        <form
+          noValidate="noValidate"
+          className=" overflow-y-scroll h-[56vh] md:h-[70vh] "
+        >
+          <div className="mb-0 h-full pr-4 md:pr-8 pl-1">
             <h3 className="text-[#7C5DFA] font-bold">Bill From</h3>
             <div>
               <Input
@@ -81,27 +97,28 @@ const Modal = ({ closeModal, children, isOpen }) => {
                   id="fromCity"
                   labelText="City"
                   type="text"
-                  name="fromStreetAddress"
+                  name="fromCity"
                   register={register}
-                  errors={errors.fromStreetAddress}
+                  errors={errors.fromCity}
                 />
 
                 <Input
                   id="fromPostalCode"
                   labelText="Postal Code"
                   type="number"
-                  name="fromStreetAddress"
+                  name="fromPostalCode"
                   register={register}
-                  errors={errors.fromStreetAddress}
+                  errors={errors.fromPostalCode}
+                  valueAsNumber={true}
                 />
 
                 <Input
                   id="fromCountry"
                   labelText="Country"
                   type="text"
-                  name="fromStreetAddress"
+                  name="fromCountry"
                   register={register}
-                  errors={errors.fromStreetAddress}
+                  errors={errors.fromCountry}
                 />
               </div>
             </div>
@@ -111,9 +128,9 @@ const Modal = ({ closeModal, children, isOpen }) => {
                 id="billToClientName"
                 labelText="Client's Name"
                 type="text"
-                name="fromStreetAddress"
+                name="clientName"
                 register={register}
-                errors={errors.fromStreetAddress}
+                errors={errors.clientName}
               />
 
               <Input
@@ -121,54 +138,61 @@ const Modal = ({ closeModal, children, isOpen }) => {
                 labelText="Client's Email"
                 type="email"
                 placeholder="e.g. email@example.com"
-                name="fromStreetAddress"
+                name="clientEmail"
                 register={register}
-                errors={errors.fromStreetAddress}
+                errors={errors.clientEmail}
               />
 
               <Input
                 id="billToStreetAddress"
                 labelText="Street Address"
                 type="text"
-                name="fromStreetAddress"
+                name="clientStreetAddress"
                 register={register}
-                errors={errors.fromStreetAddress}
+                errors={errors.clientStreetAddress}
               />
               <div className="flex gap-4">
                 <Input
                   id="billToCity"
                   labelText="City"
                   type="text"
-                  name="fromStreetAddress"
+                  name="clientCity"
                   register={register}
-                  errors={errors.fromStreetAddress}
+                  errors={errors.clientCity}
                 />
                 <Input
                   id="billToPostalCode"
                   labelText="Postal Code"
                   type="number"
-                  name="fromStreetAddress"
+                  name="clientPostalCode"
                   register={register}
-                  errors={errors.fromStreetAddress}
+                  errors={errors.clientPostalCode}
+                  valueAsNumber={true}
                 />
                 <Input
                   id="billToCountry"
                   labelText="Country"
                   type="text"
-                  name="fromStreetAddress"
+                  name="clientCountry"
                   register={register}
-                  errors={errors.fromStreetAddress}
+                  errors={errors.clientCountry}
                 />
               </div>
               <div className="flex gap-4 ">
-                <Input
-                  type="date"
-                  labelText="Invoice Date"
-                  id="billToInvoiceDate"
-                  name="fromStreetAddress"
-                  register={register}
-                  errors={errors.fromStreetAddress}
-                />
+                <div className="flex-1 flex flex-col  relative">
+                  <label
+                    htmlFor="payementTerms"
+                    className="opacity-[0.8] mt-4 mb-2 "
+                  >
+                    Invoice Date
+                  </label>
+                  <input
+                    value={date}
+                    type="date"
+                    onChange={(e) => setDate(e.target.value)}
+                    className="p-[0.5rem] border-[0.1rem] border-[#e5e7eb] rounded-lg !bg-transparent "
+                  />
+                </div>
 
                 <div className="flex-1 flex flex-col  relative">
                   <label
@@ -195,82 +219,94 @@ const Modal = ({ closeModal, children, isOpen }) => {
                 type="text"
                 labelText="Description"
                 id="description"
-                name="fromStreetAddress"
+                name="description"
                 register={register}
-                errors={errors.fromStreetAddress}
+                errors={errors.description}
               />
 
               <h3 className="font-bold my-8  opacity-[0.7]">ItemList</h3>
               <div className="flex flex-col itemList ">
-                {itemList.map((item, index) => (
-                  <div className="flex gap-4 " key={item.id}>
-                    <Input
-                      type="text"
-                      labelText="Item Name"
-                      id="itemName"
-                      name="fromStreetAddress"
-                      register={register}
-                      errors={errors.fromStreetAddress}
-                    />
-                    <Input
-                      type="number"
-                      labelText="Qty."
-                      id="quantity"
-                      name="fromStreetAddress"
-                      register={register}
-                      errors={errors.fromStreetAddress}
-                    />
-                    <Input
-                      type="number"
-                      labelText="Price"
-                      id="price"
-                      name="fromStreetAddress"
-                      register={register}
-                      errors={errors.fromStreetAddress}
-                    />
-                    <div className="flex flex-col ">
-                      <label htmlFor="total" className="opacity-[0.8] mt-4  ">
-                        Total
-                      </label>
-                      <span className=" p-2 mt-3 block w-10">{item.total}</span>
+                {errors.items && <p>{errors.items.message}</p>}
+                {itemList.length > 0 &&
+                  itemList.map((item, index) => (
+                    <div className="flex gap-4 " key={item.id}>
+                      <Input
+                        type="text"
+                        labelText="Item Name"
+                        id={`items.${index}.itemName`}
+                        name={`items.${index}.itemName`}
+                        register={register}
+                        errors={errors.items?.[index]?.itemName}
+                      />
+                      <Input
+                        type="number"
+                        labelText="Qty."
+                        id={`items.${index}.quantity`}
+                        name={`items.${index}.quantity`}
+                        register={register}
+                        errors={errors.items?.[index]?.quantity}
+                        valueAsNumber={true}
+                      />
+                      <Input
+                        type="number"
+                        labelText="Price"
+                        id={`items.${index}.price`}
+                        name={`items.${index}.price`}
+                        register={register}
+                        errors={errors.items?.[index]?.price}
+                        valueAsNumber={true}
+                      />
+                      <div className="flex flex-col ">
+                        <label htmlFor="total" className="opacity-[0.8] mt-4  ">
+                          Total
+                        </label>
+                        <span className=" p-2 mt-3 block w-10">
+                          {item.total}
+                        </span>
+                      </div>
+                      <button
+                        className="my-4 block hover:text-red-400 self-center"
+                        onClick={() => removeItem(item.id)}
+                      >
+                        <span className="fa-solid fa-trash"></span>
+                      </button>
                     </div>
-                    <button
-                      className="my-4 block hover:text-red-400 self-center"
-                      onClick={() => removeItem(item.id)}
-                    >
-                      <span className="fa-solid fa-trash"></span>
-                    </button>
-                  </div>
-                ))}
+                  ))}
               </div>
 
               <button
-                onClick={addItem}
-                className="my-8 block w-full lightBtn p-4 rounded-full font-semibold"
+                onClick={(e) => addItem(e)}
+                className="my-4 block w-full lightBtn p-4 rounded-full font-semibold mb-20"
               >
                 + Add New Item
               </button>
             </div>
           </div>
 
-        
-        </form>
-        <div className="flex sticky justify-between gap-4 py-4 mt-auto ">
+          {invalidInputs > 0 && (
+            <Errors errors={errors} length={invalidInputs} />
+          )}
+
+          <div className="flex md:bottom-0 fixed justify-between gap-4 py-4 mt-auto ">
             <button
-              className="lightBtn p-3 rounded-2xl px-4 md:px-8 md:rounded-full"
+              className="lightBtn p-3 rounded-lg px-4 md:px-8 md:rounded-full"
               onClick={closeModal}
             >
               Discard
             </button>
             <div className="flex gap-2">
-              <button className="p-3 bg-[#363B53] px-4 rounded-2xl md:ml-8 md:px-6 text-gray-300 md:rounded-full">
+              <button className="p-3 bg-[#363B53] px-3 rounded-lg md:ml-8 md:px-6 text-gray-300 md:rounded-full">
                 Save as Draft
               </button>
-              <button className="p-3 bg-[#7C5DFA] px-4  md:px-6 text-gray-300 rounded-2xl md:rounded-full">
+              <button
+                className="p-3 bg-[#7C5DFA] px-3  md:px-6 text-gray-300 rounded-lg md:rounded-full"
+                onClick={handleSubmit(validateData)}
+              >
                 Save & Send
               </button>
             </div>
           </div>
+        </form>
       </dialog>
     </>
   );
